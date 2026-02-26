@@ -1,7 +1,8 @@
 use reqwest::blocking;
 use scraper::{Html, Selector};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Job {
     pub title: String,
     pub company: String,
