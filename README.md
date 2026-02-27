@@ -51,7 +51,7 @@ Notes:
 
 This app is designed to run as a cron task so it can check for new jobs on a schedule.
 
-### 1) Prepare a runtime folder
+### Prepare a runtime folder
 
 Create a folder that contains:
 
@@ -73,7 +73,7 @@ Make sure the binary is executable:
 chmod +x /opt/job_scraper/job_scraper
 ```
 
-### 2) Add a cron entry
+### Add a cron entry
 
 Open your user crontab:
 
@@ -87,7 +87,7 @@ Add a job line (this example runs every day at 8:00 AM):
 0 8 * * * cd /opt/job_scraper && ./job_scraper >> /opt/job_scraper/cron.log 2>&1
 ```
 
-### 3) Cron settings explained
+### Cron settings explained
 
 Cron format:
 
@@ -101,7 +101,7 @@ Cron format:
 * * * * * command
 ```
 
-### 4) Useful schedule examples
+### Useful schedule examples
 
 ```cron
 # Every 30 minutes
@@ -114,7 +114,7 @@ Cron format:
 0 0 * * * cd /opt/job_scraper && ./job_scraper >> /opt/job_scraper/cron.log 2>&1
 ```
 
-### 5) Verify and monitor
+### Verify and monitor
 
 List installed cron jobs:
 
