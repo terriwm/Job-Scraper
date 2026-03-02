@@ -122,6 +122,7 @@ fn generate_html(jobs: &[Job]) -> String {
 
     let count = jobs.len();
     let plural = if count == 1 { "" } else { "s" };
+    let is_are = if count == 1 { "is" } else { "are" };
 
     format!(
         r#"
@@ -172,7 +173,7 @@ fn generate_html(jobs: &[Job]) -> String {
                 </style>
             </head>
             <body>
-                <h2 class="job-title">Good Morning, there are {count} new job{plural}:</h2>
+                <h2 class="job-title">Good Morning, there {is_are} {count} new job{plural}:</h2>
                 {cards}
             </body>
         </html>
