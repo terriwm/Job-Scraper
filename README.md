@@ -10,26 +10,34 @@
 - Sends an HTML email summary of new jobs (or a no-new-jobs message).
 - Saves the latest job snapshot for the next run.
 
-This project is useful for lightweight job monitoring and daily alerting without running a full web app.
-
-## Features
-
-- HTML scraping with CSS selectors via `scraper`
-- Blocking HTTP fetch with `reqwest`
-- Snapshot persistence using `bincode` + `serde`
-- SMTP email sending with `lettre`
-- `.env` support with `dotenvy`
-
 ## Requirements
 
-- Rust toolchain (stable)
+- Rust toolchain (stable) - if you wish to build the binary yourself
 - Network access to:
 	- target jobs page
 	- your SMTP server
 
-## Configuration
+## Usage
 
-Create a `.env` file in the project root:
+This app is designed to run as a cron task so it can check for new jobs on a schedule.
+
+### Prepare a runtime folder
+
+Create a folder that contains:
+
+- the compiled binary (for example `job_scraper`)
+- your `.env` file
+- the `previous_jobs` snapshot file
+
+Example:
+
+```bash
+mkdir -p ~/job_scraper
+touch ~/job_scraper/previous_jobs
+touch ~/job_scraper/.env
+```
+
+Using the `.env.example` fill in all the required information in `.env`, and place the binary in `~/job_scraper`.
 
 ```env
 SMTP_USERNAME=your_smtp_username
@@ -47,30 +55,10 @@ Notes:
 - `SMTP_USER` can be used instead of `SMTP_USERNAME`.
 - `SMTP_PASS` can be used instead of `SMTP_PASSWORD`.
 
-## Usage
-
-This app is designed to run as a cron task so it can check for new jobs on a schedule.
-
-### Prepare a runtime folder
-
-Create a folder that contains:
-
-- the compiled binary (for example `job_scraper`)
-- your `.env` file
-- the `previous_jobs` snapshot file
-
-Example:
-
-```bash
-mkdir -p /opt/job_scraper
-cp ./target/release/job_scraper /opt/job_scraper/
-touch /opt/job_scraper/previous_jobs
-```
-
 Make sure the binary is executable:
 
 ```bash
-chmod +x /opt/job_scraper/job_scraper
+chmod +x ~/job_scraper/job_scraper
 ```
 
 ### Add a cron entry
@@ -84,7 +72,7 @@ crontab -e
 Add a job line (this example runs every day at 8:00 AM):
 
 ```cron
-0 8 * * * cd /opt/job_scraper && ./job_scraper >> /opt/job_scraper/cron.log 2>&1
+0 8 * * * cd ~/job_scraper && ./job_scraper >> ~/job_scraper/cron.log 2>&1
 ```
 
 ### Cron settings explained
@@ -105,13 +93,13 @@ Cron format:
 
 ```cron
 # Every 30 minutes
-*/30 * * * * cd /opt/job_scraper && ./job_scraper >> /opt/job_scraper/cron.log 2>&1
+*/30 * * * * cd ~/job_scraper && ./job_scraper >> ~/job_scraper/cron.log 2>&1
 
 # Weekdays at 9:00 AM
-0 9 * * 1-5 cd /opt/job_scraper && ./job_scraper >> /opt/job_scraper/cron.log 2>&1
+0 9 * * 1-5 cd ~/job_scraper && ./job_scraper >> ~/job_scraper/cron.log 2>&1
 
 # Daily at midnight
-0 0 * * * cd /opt/job_scraper && ./job_scraper >> /opt/job_scraper/cron.log 2>&1
+0 0 * * * cd ~/job_scraper && ./job_scraper >> ~/job_scraper/cron.log 2>&1
 ```
 
 ### Verify and monitor
