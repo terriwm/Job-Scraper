@@ -22,10 +22,21 @@ fn save_jobs(path: impl AsRef<Path>, jobs: &Vec<Job>) -> io::Result<()> {
 }
 
 fn load_jobs(path: impl AsRef<Path>) -> io::Result<Vec<Job>> {
-    let bytes = fs::read(path)?;
+    let bytes = match fs::read(path) {
+        Ok(bytes) => bytes,
+        Err(_) => return Ok(Vec::new()),
+    };
+
+    if bytes.is_empty() {
+        return Ok(Vec::new());
+    }
+
     let (jobs, _): (Vec<Job>, usize) =
-        bincode::serde::decode_from_slice(&bytes, bincode::config::standard())
-            .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+        match bincode::serde::decode_from_slice(&bytes, bincode::config::standard()) {
+            Ok(decoded) => decoded,
+            Err(_) => return Ok(Vec::new()),
+        };
+
     Ok(jobs)
 }
 
